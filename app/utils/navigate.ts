@@ -22,7 +22,7 @@ export const getRoleBasedPath = (user:any) => {
 
 export const navigateUserByRole = (user:any) => {
   const path = getRoleBasedPath(user);
-  // const router = useRouter();
-  // return router.push(path)
-  return navigateTo(path, { replace: true });
+  const router = useRouter();
+  return router.push(path)
+  // return navigateTo(path, { replace: true });
 }
