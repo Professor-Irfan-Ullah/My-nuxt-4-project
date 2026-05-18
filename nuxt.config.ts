@@ -371,14 +371,14 @@ export default defineNuxtConfig({
           src: '/android-chrome-192x192.png', 
           sizes: '192x192',
           type: 'image/png',
-          purpose: 'any maskable' // 💡 Added purpose to maximize PWA compatibility
+          // purpose: 'any maskable' // 💡 Added purpose to maximize PWA compatibility
         },
         {
           // ⚠️ FIX: Removed "./public" prefix
           src: '/android-chrome-512x512.png',
           sizes: '512x512',
           type: 'image/png',
-          purpose: 'any'
+          // purpose: 'any'
         }
       ]
     },
@@ -387,18 +387,7 @@ export default defineNuxtConfig({
       // ⚠️ FIX 2: Restrict the fallback strictly to the root page.
       // This stops Workbox from trying to control or refresh /login.
       // navigateFallbackAllowlist: [/^\/$/],
-      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
-      globIgnores: [
-        'server/**',
-        '**/node_modules/**',
-        '**/*.map',
-        '.nuxt/**',
-        'dist/server/**'
-      ],
-      maximumFileSizeToCacheInBytes:4000000 
-    },
-    client:{
-      registerPlugin:true
+      // globPatterns: ['**/*.{js,css,html,png,svg,ico}']
     },
     devOptions: {
       enabled: true,
