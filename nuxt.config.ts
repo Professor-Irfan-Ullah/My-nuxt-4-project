@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     '@nuxt/icon', 
     'nuxt-lucide-icons', 
     '@nuxtjs/leaflet',
-    '@vite-pwa/nuxt'
+    // '@vite-pwa/nuxt'
   ],
 
 //   pwa: {
