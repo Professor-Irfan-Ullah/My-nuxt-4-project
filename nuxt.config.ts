@@ -136,5 +136,20 @@ export default defineNuxtConfig({
 
   pinia: {
     storesDirs: ['./app/stores/**']
+  },
+  vite: {
+     optimizeDeps: {
+      include: [
+        'dexie',
+      ]
+    }
+  },
+  routeRules: {
+    '/user/dashboard': {
+      ssr: false
+    },
+    '/user/add-report': {
+      ssr: false
+    }
   }
 })
