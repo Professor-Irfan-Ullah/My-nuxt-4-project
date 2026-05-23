@@ -101,7 +101,6 @@
           description="Submit new disaster damage assessment"
           icon="plus"
           color="blue"
-          :disabled="isNewReportDisabled"
           @click="handleNewReport"
         />
 
@@ -338,15 +337,17 @@ const refreshReports = async () => {
 };
 
 const handleNewReport = () => {
-  if (isNewReportDisabled.value) {
-    showLimitModal.value = true;
-    return;
-  }
+  // if (isNewReportDisabled.value) {
+  //   showLimitModal.value = true;
+  //   return;
+  // }
+  const route = useRoute();
+  console.log(route.fullPath);
   createNewReport();
 };
 
 const createNewReport = () => {
-  navigateTo("/report");
+  navigateTo("/user/add-report");
 };
 
 const viewReport = (id) => {

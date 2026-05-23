@@ -1447,7 +1447,7 @@
                 <div class="flex justify-between text-[11px]">
                   <span class="text-gray-500">Small cattle</span>
                   <span class="font-medium text-gray-700">{{
-                    selectedDistrict.district_total_big_animals_deaths.toLocaleString() ||
+                    selectedDistrict.district_total_small_animals_injuries.toLocaleString() ||
                     0
                   }}</span>
                 </div>

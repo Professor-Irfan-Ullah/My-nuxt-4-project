@@ -1,46 +1,80 @@
-// // composables/useOnlineStatus.js
-// export const useOnlineStatus = () => {
-//     const isOnline = ref(navigator.onLine);
-
-//     const updateOnlineStatus = () => {
-//         isOnline.value = navigator.onLine;
-//     };
-
-//     onMounted(() => {
-//         window.addEventListener('online', updateOnlineStatus);
-//         window.addEventListener('offline', updateOnlineStatus);
-//     });
-
-//     onUnmounted(() => {
-//         window.removeEventListener('online', updateOnlineStatus);
-//         window.removeEventListener('offline', updateOnlineStatus);
-//     });
-
-//     return { isOnline };
-// };
-// composables/useOnlineStatus.js
 export const useOnlineStatus = () => {
-    // Default to true on the server, then check on the client side
-    const isOnline = ref(true);
+    // Start with null (unknown) instead of true
+    const isOnline = ref(null)
+    const isChecking = ref(true)
 
-    const updateOnlineStatus = () => {
-        if (import.meta.client) {
-            isOnline.value = navigator.onLine;
+    const checkConnection = async () => {
+        if (!import.meta.client) return true
+
+        try {
+            // Try to fetch a small resource
+            const controller = new AbortController()
+            const timeoutId = setTimeout(() => controller.abort(), 3000)
+
+            const response = await fetch('/favicon.ico', {
+                method: 'HEAD',
+                cache: 'no-cache',
+                headers: { 'Pragma': 'no-cache' }
+            })
+
+            clearTimeout(timeoutId)
+            return response.ok || response.status === 404
+        } catch (error) {
+            return false
         }
-    };
+    }
+
+    const updateOnlineStatus = async () => {
+        if (import.meta.client) {
+            isChecking.value = true
+            const status = await checkConnection()
+            isOnline.value = status
+            isChecking.value = false
+        }
+    }
+
+    // Force a manual check
+    const forceCheck = async () => {
+        await updateOnlineStatus()
+        return isOnline.value
+    }
 
     onMounted(() => {
-        // Initialize the actual browser status once mounted
-        isOnline.value = navigator.onLine;
+        // Initial check
+        updateOnlineStatus()
 
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-    });
+        // Listen to browser events
+        window.addEventListener('online', () => {
+            updateOnlineStatus()
+        })
 
-    onUnmounted(() => {
-        window.removeEventListener('online', updateOnlineStatus);
-        window.removeEventListener('offline', updateOnlineStatus);
-    });
+        window.addEventListener('offline', () => {
+            isOnline.value = false
+            isChecking.value = false
+        })
 
-    return { isOnline };
-};
+        // Re-check when page becomes visible
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                updateOnlineStatus()
+            }
+        })
+
+        // Periodic check every 30 seconds
+        const interval = setInterval(updateOnlineStatus, 30000)
+
+        onUnmounted(() => {
+            clearInterval(interval)
+            window.removeEventListener('online', updateOnlineStatus)
+            window.removeEventListener('offline', () => { })
+            document.removeEventListener('visibilitychange', updateOnlineStatus)
+        })
+    })
+
+    return {
+        isOnline,      // null = unknown, true = online, false = offline
+        isChecking,    // true = checking connection
+        forceCheck,    // manual check function
+        updateOnlineStatus
+    }
+}

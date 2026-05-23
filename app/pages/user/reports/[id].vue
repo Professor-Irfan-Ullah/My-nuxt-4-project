@@ -891,7 +891,7 @@ import ReusableModal from "~/components/reusableModal.vue";
 const route = useRoute();
 definePageMeta({
   middleware: "role-check",
-  allowedRoles: ["user"],
+  allowedRoles: ["user", "admin", "super_admin"],
 });
 useSeoMeta({
   title: `View Submitted Report ${route.params.id}`,

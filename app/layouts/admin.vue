@@ -9,7 +9,9 @@
             <div
               class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
             >
-              <span class="text-white font-bold text-lg">A</span>
+              <span class="text-white font-bold text-lg">{{
+                userRoleFetch
+              }}</span>
             </div>
             <span class="font-semibold text-gray-900 hidden sm:inline"
               >Admin Portal</span
@@ -97,7 +99,7 @@
               d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
             />
           </svg>
-          <span class="text-xs">Home</span>
+          <span class="text-xs">Dashboard</span>
         </NuxtLink>
 
         <NuxtLink
@@ -143,6 +145,12 @@ const userNameFetch = computed(() => {
     return store.userData.name[0];
   }
   return "Error";
+});
+const userRoleFetch = computed(() => {
+  if (store?.userData?.role) {
+    return store?.userData?.role[0].toUpperCase();
+  }
+  return "Unde";
 });
 // Close dropdown when clicking outside
 const handleClickOutside = (event) => {

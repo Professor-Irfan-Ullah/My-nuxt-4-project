@@ -3,6 +3,7 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <pwa-install-button />
-  <pwa-update-notification />
+  <!-- <pwa-status /> -->
+  <!-- <pwa-install-button />
+  <pwa-update-notification /> -->
 </template>

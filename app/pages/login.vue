@@ -167,155 +167,157 @@
       <!-- Form Section -->
       <div class="p-6">
         <!-- Form -->
-        <form @submit.prevent="login" class="space-y-6">
-          <!-- Email Field -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Email Address <span class="text-red-500">*</span>
-            </label>
-            <div class="relative">
-              <input
-                v-model="form.email"
-                type="email"
-                required
-                :class="[
-                  'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all',
-                  emailError ? 'border-red-300 bg-red-50' : 'border-gray-300',
-                ]"
-                placeholder="Enter your email address"
-                @blur="validateEmail"
-              />
-              <div class="absolute right-3 top-3.5">
-                <svg
-                  class="w-5 h-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
+        <client-only>
+          <form @submit.prevent="login" class="space-y-6">
+            <!-- Email Field -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Email Address <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <input
+                  v-model="form.email"
+                  type="email"
+                  required
+                  :class="[
+                    'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all',
+                    emailError ? 'border-red-300 bg-red-50' : 'border-gray-300',
+                  ]"
+                  placeholder="Enter your email address"
+                  @blur="validateEmail"
+                />
+                <div class="absolute right-3 top-3.5">
+                  <svg
+                    class="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
               </div>
-            </div>
-            <!-- <p v-if="emailHelpText" class="text-xs text-gray-500 mt-1">
+              <!-- <p v-if="emailHelpText" class="text-xs text-gray-500 mt-1">
               {{ emailHelpText }}
             </p> -->
-          </div>
+            </div>
 
-          <!-- Password -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Password <span class="text-red-500">*</span>
-            </label>
-            <div class="relative">
+            <!-- Password -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Password <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <input
+                  v-model="form.password"
+                  :type="showPass ? 'text' : 'password'"
+                  required
+                  :class="[
+                    'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all pr-10',
+                    passwordError
+                      ? 'border-red-300 bg-red-50'
+                      : 'border-gray-300',
+                  ]"
+                  placeholder="Enter your password"
+                  @blur="validatePassword"
+                />
+                <button
+                  type="button"
+                  @click="showPass = !showPass"
+                  class="absolute right-3 top-3 text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      v-if="showPass"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L6.59 6.59m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                    />
+                    <path
+                      v-else
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="flex justify-between items-center mt-1">
+                <p v-if="passwordError" class="text-sm text-red-600">
+                  {{ passwordError }}
+                </p>
+                <button
+                  type="button"
+                  @click="goToForgotPassword"
+                  class="text-sm text-blue-600 hover:text-blue-500 font-medium"
+                >
+                  Forgot password?
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember Me Checkbox -->
+            <div class="flex items-center">
               <input
-                v-model="form.password"
-                :type="showPass ? 'text' : 'password'"
-                required
-                :class="[
-                  'w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all pr-10',
-                  passwordError
-                    ? 'border-red-300 bg-red-50'
-                    : 'border-gray-300',
-                ]"
-                placeholder="Enter your password"
-                @blur="validatePassword"
+                id="remember"
+                v-model="form.remember"
+                type="checkbox"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <button
-                type="button"
-                @click="showPass = !showPass"
-                class="absolute right-3 top-3 text-gray-500 hover:text-gray-700 transition-colors"
-              >
+              <label for="remember" class="ml-2 text-sm text-gray-700">
+                Remember me
+              </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              :disabled="loading"
+              :class="[
+                'w-full py-3 px-4 text-white font-medium rounded-lg transition-all shadow-md',
+                loading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg transform hover:-translate-y-0.5',
+              ]"
+            >
+              <span v-if="loading" class="flex items-center justify-center">
                 <svg
-                  class="w-5 h-5"
+                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                   fill="none"
-                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
                   <path
-                    v-if="showPass"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L6.59 6.59m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                  />
-                  <path
-                    v-else
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
-              </button>
-            </div>
-            <div class="flex justify-between items-center mt-1">
-              <p v-if="passwordError" class="text-sm text-red-600">
-                {{ passwordError }}
-              </p>
-              <button
-                type="button"
-                @click="goToForgotPassword"
-                class="text-sm text-blue-600 hover:text-blue-500 font-medium"
-              >
-                Forgot password?
-              </button>
-            </div>
-          </div>
-
-          <!-- Remember Me Checkbox -->
-          <div class="flex items-center">
-            <input
-              id="remember"
-              v-model="form.remember"
-              type="checkbox"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label for="remember" class="ml-2 text-sm text-gray-700">
-              Remember me
-            </label>
-          </div>
-
-          <!-- Submit Button -->
-          <button
-            type="submit"
-            :disabled="loading"
-            :class="[
-              'w-full py-3 px-4 text-white font-medium rounded-lg transition-all shadow-md',
-              loading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg transform hover:-translate-y-0.5',
-            ]"
-          >
-            <span v-if="loading" class="flex items-center justify-center">
-              <svg
-                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Signing In...
-            </span>
-            <span v-else>Sign In</span>
-          </button>
-        </form>
+                Signing In...
+              </span>
+              <span v-else>Sign In</span>
+            </button>
+          </form>
+        </client-only>
 
         <!-- Register Link -->
         <div class="mt-8 pt-6 border-t border-gray-200">

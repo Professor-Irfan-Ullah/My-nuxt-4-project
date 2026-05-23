@@ -1135,7 +1135,7 @@
 
       <status-indicators
         :has-submitted="hasSubmitted"
-        :is-online="isOnline"
+        :is-online="isOnline === true"
         :pending-count="pendingCount"
         :is-syncing="isSyncing"
         :synced-count="syncedCount"
@@ -1144,6 +1144,15 @@
         @retry-failed="retryFailedReports"
         ref="statusIndicators"
       />
+      <!-- Show loading state while checking -->
+      <div
+        v-if="isOnline === null && isChecking"
+        class="fixed top-4 right-4 z-50"
+      >
+        <div class="bg-gray-800 text-white px-3 py-1 rounded-full text-sm">
+          🔄 Checking connection...
+        </div>
+      </div>
     </div>
 
     <modal-vue :is-open="showSuccessModal" @close="resetForm">
@@ -1247,7 +1256,7 @@ useSeoMeta({
 });
 
 const store = useReportStore();
-const { isOnline } = useOnlineStatus();
+const { isOnline, isChecking } = useOnlineStatus();
 const {
   isSyncing,
   pendingCount,
@@ -1918,255 +1927,6 @@ watch(areAnimalsImpacted, (newVal) => {
 });
 
 // Form Submission
-/*
-const submitForm = async () => {
-  if (missingRequiredFields.value.length > 0) {
-    alert(
-      `Please fill in all required fields:\n${missingRequiredFields.value.join(
-        "\n"
-      )}`
-    );
-    return;
-  }
-
-  if (validationErrors.value.length > 0) {
-    alert(
-      `Please fix the following errors:\n${validationErrors.value.join("\n")}`
-    );
-    return;
-  }
-
-  isSubmitting.value = true;
-
-  try {
-    // Create a JSON object for all text data
-    const reportData = {
-      disaster_type: disasterType.value,
-      location: location.value,
-
-      // Properties impact
-      are_properties_impacted: arePropertiesImpacted.value,
-      properties: arePropertiesImpacted.value
-        ? properties.value.map((property) => ({
-            property_type: property.propertyType,
-            damage_level: property.damageLevel,
-          }))
-        : [],
-
-      // Human impact
-      are_humans_impacted: areHumansImpacted.value,
-      total_residents_count: areHumansImpacted.value
-        ? totalResidentsCount.value
-        : 0,
-      deaths_count: deathsCount.value,
-      injured_count: injuredCount.value,
-      pregnant_women_count: pregnantWomenCount.value,
-      disabled_persons_count: disabledPersonsCount.value,
-      school_going_children_count: schoolGoingChildrenCount.value,
-      married_couples_count: marriedCouplesCount.value,
-
-      // Animal impact
-      are_animals_impacted: areAnimalsImpacted.value,
-      big_animals_death_count: bigAnimalsDeathCount.value,
-      big_animals_injured_count: bigAnimalsInjuredCount.value,
-      small_animals_death_count: smallAnimalsDeathCount.value,
-      small_animals_injured_count: smallAnimalsInjuredCount.value,
-    };
-
-    // Create FormData
-    const formData = new FormData();
-
-    // Append the JSON data as a string
-    formData.append("data", JSON.stringify(reportData));
-
-    // Append property images
-    if (arePropertiesImpacted.value) {
-      properties.value.forEach((property, index) => {
-        if (property.image) {
-          formData.append("property_images", property.image.file);
-        }
-      });
-    }
-
-    const response = await store.addReport(formData);
-    console.log("Report created successfully:", response);
-    responseMsg.value = response.msg;
-    showSuccessModal.value = true;
-    showErrorModal.value = false;
-  } catch (error) {
-    console.error("Error submitting form:", error);
-    showSuccessModal.value = false;
-    showErrorModal.value = true;
-    errorMessage.value = error.response?.data?.message || error.message;
-  } finally {
-    isSubmitting.value = false;
-  }
-};
-*/
-// Replace your submitForm function
-/*
-const submitForm = async () => {
-
-  if (missingRequiredFields.value.length > 0) {
-    alert(
-      `Please fill in all required fields:\n${missingRequiredFields.value.join(
-        "\n"
-      )}`
-    );
-    return;
-  }
-
-  if (validationErrors.value.length > 0) {
-    alert(
-      `Please fix the following errors:\n${validationErrors.value.join("\n")}`
-    );
-    return;
-  }
-
-  isSubmitting.value = true;
-
-  try {
-    // Prepare report data
-    const reportData = {
-      disaster_type: disasterType.value,
-      location: location.value,
-      are_properties_impacted: arePropertiesImpacted.value,
-      properties: arePropertiesImpacted.value
-        ? properties.value.map((property) => ({
-            property_type: property.propertyType,
-            damage_level: property.damageLevel,
-          }))
-        : [],
-      are_humans_impacted: areHumansImpacted.value,
-      total_residents_count: areHumansImpacted.value
-        ? totalResidentsCount.value
-        : 0,
-      deaths_count: deathsCount.value,
-      injured_count: injuredCount.value,
-      pregnant_women_count: pregnantWomenCount.value,
-      disabled_persons_count: disabledPersonsCount.value,
-      school_going_children_count: schoolGoingChildrenCount.value,
-      married_couples_count: marriedCouplesCount.value,
-      are_animals_impacted: areAnimalsImpacted.value,
-      big_animals_death_count: bigAnimalsDeathCount.value,
-      big_animals_injured_count: bigAnimalsInjuredCount.value,
-      small_animals_death_count: smallAnimalsDeathCount.value,
-      small_animals_injured_count: smallAnimalsInjuredCount.value,
-      submitted_at: new Date().toISOString(),
-    };
-
-    // Collect images as base64
-    const images = [];
-    if (arePropertiesImpacted.value) {
-      for (const property of properties.value) {
-        if (property.image && property.image.file) {
-          const base64 = await fileToBase64(property.image.file);
-          images.push({
-            name: property.image.name,
-            size: property.image.size,
-            type: property.image.type,
-            base64: base64,
-          });
-        }
-      }
-    }
-
-    // Check if offline
-    if (!isOnline.value) {
-      // Save to Dexie when offline
-      await reportDB.savePendingReport(reportData, images);
-      await loadPendingCount();
-
-      responseMsg.value = `📱 Report saved locally! (${pendingCount.value} pending) Will submit when online.`;
-      showSuccessModal.value = true;
-      resetForm();
-    } else {
-      // Submit normally when online
-      const formData = new FormData();
-      formData.append("data", JSON.stringify(reportData));
-
-      if (arePropertiesImpacted.value) {
-        properties.value.forEach((property) => {
-          if (property.image && property.image.file) {
-            formData.append("property_images", property.image.file);
-          }
-        });
-      }
-      const response = await store.addReport(formData);
-      console.log("Report created successfully:", response);
-      responseMsg.value = response.msg;
-      showSuccessModal.value = true;
-      showErrorModal.value = false;
-    }
-
-    showErrorModal.value = false;
-  } catch (error) {
-    console.error("Error submitting form:", error);
-
-    // If online submission fails, save offline as backup
-    if (isOnline.value) {
-      try {
-        const reportData = {
-          disaster_type: disasterType.value,
-          location: location.value,
-          are_properties_impacted: arePropertiesImpacted.value,
-          properties: arePropertiesImpacted.value
-            ? properties.value.map((property) => ({
-                property_type: property.propertyType,
-                damage_level: property.damageLevel,
-              }))
-            : [],
-          are_humans_impacted: areHumansImpacted.value,
-          total_residents_count: areHumansImpacted.value
-            ? totalResidentsCount.value
-            : 0,
-          deaths_count: deathsCount.value,
-          injured_count: injuredCount.value,
-          pregnant_women_count: pregnantWomenCount.value,
-          disabled_persons_count: disabledPersonsCount.value,
-          school_going_children_count: schoolGoingChildrenCount.value,
-          married_couples_count: marriedCouplesCount.value,
-          are_animals_impacted: areAnimalsImpacted.value,
-          big_animals_death_count: bigAnimalsDeathCount.value,
-          big_animals_injured_count: bigAnimalsInjuredCount.value,
-          small_animals_death_count: smallAnimalsDeathCount.value,
-          small_animals_injured_count: smallAnimalsInjuredCount.value,
-          submitted_at: new Date().toISOString(),
-        };
-        const images = [];
-        for (const property of properties.value) {
-          if (property.image && property.image.file) {
-            const base64 = await fileToBase64(property.image.file);
-            images.push({
-              name: property.image.name,
-              size: property.image.size,
-              type: property.image.type,
-              base64: base64,
-            });
-          }
-        }
-        await reportDB.savePendingReport(reportData, images);
-        await loadPendingCount();
-        responseMsg.value =
-          "⚠️ Server error. Report saved locally and will be submitted later.";
-        showSuccessModal.value = true;
-        showErrorModal.value = false;
-        resetForm();
-      } catch (offlineError) {
-        showSuccessModal.value = false;
-        showErrorModal.value = true;
-        errorMessage.value = error.response?.data?.message || error.message;
-      }
-    } else {
-      showSuccessModal.value = false;
-      showErrorModal.value = true;
-      errorMessage.value = "📴 You're offline. Report has been saved locally.";
-    }
-  } finally {
-    isSubmitting.value = false;
-  }
-};
-*/
 
 const submitForm = async () => {
   // NEW: Check if already submitted
