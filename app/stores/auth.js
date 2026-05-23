@@ -58,22 +58,43 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     // Inside useAuthStore
+    // const userAuthStatus = async () => {
+    //     if (userData.value) return true;
+
+    //     try {
+    //         // useAsyncData shares state from Server -> Client payload
+    //         const { data } = await useAsyncData('auth-check', () => api('/api/auth/protected'));
+
+    //         userData.value = data.value;
+    //         return !!userData.value;
+    //     } catch (error) {
+    //         userData.value = null;
+    //         return false;
+    //     }
+    // };
+
+    // stores/auth.ts
     const userAuthStatus = async () => {
-        if (userData.value) return true;
+        // 🔑 Only check auth on client-side
+        if (process.server) {
+            console.log('⏭️ Skipping auth check on server')
+            return false
+        }
+
+        if (userData.value) return true
 
         try {
-            // useAsyncData shares state from Server -> Client payload
-            const { data } = await useAsyncData('auth-check', () => api('/api/auth/protected'));
+            const { data } = await useAsyncData('auth-check', () =>
+                api('/api/auth/protected')
+            )
 
-            userData.value = data.value;
-            return !!userData.value;
+            userData.value = data.value?.user || data.value
+            return !!userData.value
         } catch (error) {
-            userData.value = null;
-            return false;
+            userData.value = null
+            return false
         }
-    };
-
-
+    }
 
 
 
