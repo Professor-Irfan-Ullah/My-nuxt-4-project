@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/:path*",
+            "destination": "https://city-centric-backend-e8z9.vercel.app/api/:path*"
+        }
+    ]
+}
