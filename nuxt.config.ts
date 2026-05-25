@@ -150,6 +150,11 @@ export default defineNuxtConfig({
     },
     '/user/add-report': {
       ssr: false
-    }
+    },
+    // '/login' : {
+    //   appMiddleware: {'01-auth-global' : false}
+    // }, '/register' : {
+    //   appMiddleware: {'01-auth-global' : false}
+    // }
   }
 })

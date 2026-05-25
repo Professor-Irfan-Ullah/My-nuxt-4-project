@@ -3,11 +3,11 @@ import { defineStore } from "pinia"
 // app/stores/auth.ts
 export const useAuthStore = defineStore('auth', () => {
     const userData = useState('user-data', () => null)
-
+    const isAuthChecked = ref(false)
     const registerUser = async (name, father_name, email, cnic, contact, muhalla, village, tehsil, district, password) => {
         try {
             // In $fetch, the body goes inside the options object
-            return await api('/api/auth/register', {
+            return await useApi('/api/auth/register', {
                 method: 'POST',
                 body: {
                     name,
@@ -32,7 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
 
         try {
             // response is the data itself
-            return await api('/api/auth/verify', {
+            return await useApi('/api/auth/verify', {
                 method: 'POST',
                 body: { password, token }
             })
@@ -43,7 +43,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const login = async (email, password) => {
         try {
-            const response = await api('/api/auth/login', {
+            const response = await useApi('/api/auth/login', {
                 method: 'POST',
                 body: { email, password }
             })
@@ -63,7 +63,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     //     try {
     //         // useAsyncData shares state from Server -> Client payload
-    //         const { data } = await useAsyncData('auth-check', () => api('/api/auth/protected'));
+    //         const { data } = await useAsyncData('auth-check', () => useApi('/api/auth/protected'));
 
     //         userData.value = data.value;
     //         return !!userData.value;
@@ -75,39 +75,36 @@ export const useAuthStore = defineStore('auth', () => {
 
     // stores/auth.ts
     const userAuthStatus = async () => {
-        // 🔑 Only check auth on client-side
-        if (process.server) {
-            console.log('⏭️ Skipping auth check on server')
-            return false
+        if (userData.value) {
+            isAuthChecked.value = true;
+            return true;
         }
-
-        if (userData.value) return true
 
         try {
-            const { data } = await useAsyncData('auth-check', () =>
-                api('/api/auth/protected')
-            )
-
-            userData.value = data.value?.user || data.value
-            return !!userData.value
-        } catch (error) {
-            userData.value = null
-            return false
+            // useAsyncData automatically shares the server response with the client payload
+            const data = await useApi('/api/auth/protected')
+            userData.value = data
+            return true
+        } catch {
+            userData.value = null;
+            return false;
+        } finally {
+            isAuthChecked.value = true;
         }
-    }
+    };
 
 
 
 
     const forgotPassword = async (email) => {
-        return await api('/api/auth/forgot-password', {
+        return await useApi('/api/auth/forgot-password', {
             method: 'POST',
             body: { email }
         })
     }
 
     const reset_password = async (payload) => {
-        return await api('/api/auth/reset-password', {
+        return await useApi('/api/auth/reset-password', {
             method: 'POST',
             body: {
                 token: payload.token,
@@ -118,6 +115,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     return {
+        isAuthChecked,
         login,
         registerUser,
         userAuthStatus,

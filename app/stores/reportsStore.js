@@ -7,7 +7,7 @@ export const useReportStore = defineStore('report', () => {
         console.log(payload);
 
         try {
-            const response = await api('/api/user/post/report', {
+            const response = await useApi('/api/user/post/report', {
                 method: 'POST',
                 body: payload,
                 headers: getHeaders()
@@ -19,7 +19,7 @@ export const useReportStore = defineStore('report', () => {
     };
 
     const fetchReports = async () => {
-        const response = await api('/api/user/get/reports', {
+        const response = await useApi('/api/user/get/reports', {
             method: 'GET',
         })
         reports.value = response
