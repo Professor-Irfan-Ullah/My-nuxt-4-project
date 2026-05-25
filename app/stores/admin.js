@@ -11,7 +11,7 @@ export const useAdminStore = defineStore("adminReports", () => {
 
   const fetchAllReports = async () => {
     try {
-      const response = await api('/api/admin/get/reports', {
+      const response = await useApi('/api/admin/get/reports', {
         headers: getHeaders()
       })
       reports.value = response.reports
@@ -23,7 +23,7 @@ export const useAdminStore = defineStore("adminReports", () => {
 
   const fetchAdminAnalytics = async () => {
     try {
-      const response = await api('/api/admin/get/analytics', {
+      const response = await useApi('/api/admin/get/analytics', {
         headers: getHeaders()
       })
       analytics.value = response
@@ -35,7 +35,7 @@ export const useAdminStore = defineStore("adminReports", () => {
 
   const fetchSingleReport = async (reportId) => {
     try {
-      return await api('/api/admin/get/report', {
+      return await useApi('/api/admin/get/report', {
         query: { reportId }, // Standard way to handle ?key=value
         headers: getHeaders()
       })
@@ -46,7 +46,7 @@ export const useAdminStore = defineStore("adminReports", () => {
 
   const downloadReportInPDF = async (reportId) => {
     try {
-      const response = await api(`/api/admin/download-pdf`, {
+      const response = await useApi(`/api/admin/download-pdf`, {
         query: { report_id: reportId },
         headers: getHeaders(),
         responseType: 'blob',
@@ -71,7 +71,7 @@ export const useAdminStore = defineStore("adminReports", () => {
 
   const getAllAdminsInfo = async () => {
     try {
-      return await api('/api/admin/get/admins', {
+      return await useApi('/api/admin/get/admins', {
         headers: getHeaders()
       })
     } catch (error) {
@@ -82,7 +82,7 @@ export const useAdminStore = defineStore("adminReports", () => {
   const inviteAdminToTheSystem = async (cnic) => {
     try {
       // Nuxt $fetch POST syntax: path + options.body
-      return await api('/api/admin/invite/admin', {
+      return await useApi('/api/admin/invite/admin', {
         method: 'POST',
         body: { cnic },
         headers: getHeaders()
@@ -95,7 +95,7 @@ export const useAdminStore = defineStore("adminReports", () => {
   const modifyReport = async (payload) => {
     try {
       // Nuxt $fetch PUT syntax
-      return await api('/api/admin/update/report', {
+      return await useApi('/api/admin/update/report', {
         method: 'PUT',
         body: payload,
         headers: getHeaders()
