@@ -1229,7 +1229,7 @@
           Close
         </button>
         <button
-          @click="showErrorModal = false"
+          @click="handleRetry"
           class="flex-1 px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
         >
           Try Again
@@ -1917,6 +1917,19 @@ const resetAnimalCounts = () => {
   }
 };
 
+// handle try again
+const handleRetry = () => {
+  const route = useRoute();
+  showErrorModal.value = false;
+  if (
+    errorMessage.value ===
+    "Token not Found please log in. Please perform a hard refresh for a fresh start."
+  )
+    return navigateTo(`/login?redirect=${encodeURIComponent(route.fullPath)}`, {
+      replace: true,
+    });
+};
+
 // Watch for changes
 watch(areHumansImpacted, (newVal) => {
   if (!newVal) resetHumanCounts();
@@ -2050,7 +2063,9 @@ const submitForm = async () => {
     if (error.response._data.statusCode === 401) {
       showSuccessModal.value = false;
       showErrorModal.value = true;
-      errorMessage.value = error.response._data.message;
+      errorMessage.value =
+        error.response._data.message +
+        ". Please perform a hard refresh for a fresh start.";
       return;
     }
     // Handle duplicate submission errors
