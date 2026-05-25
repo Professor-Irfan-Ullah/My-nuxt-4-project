@@ -2046,8 +2046,13 @@ const submitForm = async () => {
 
     showErrorModal.value = false;
   } catch (error) {
-    console.error("Error submitting form:", error);
-
+    console.warn(error.response._data.message);
+    if (error.response._data.statusCode === 401) {
+      showSuccessModal.value = false;
+      showErrorModal.value = true;
+      errorMessage.value = error.response._data.message;
+      return;
+    }
     // Handle duplicate submission errors
     if (error.message === "ONLY_ONE_REPORT_ALLOWED") {
       alert(
