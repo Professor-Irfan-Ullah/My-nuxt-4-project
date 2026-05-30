@@ -482,16 +482,17 @@ const login = async () => {
       }...`
     );
 
-    if (redirectPath) {
-      setTimeout(() => {
-        redirectPath = decodeURIComponent(redirectPath);
-        router.push(redirectPath);
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        navigateUserByRole(response.user);
-      }, 2000);
-    }
+    // if (redirectPath) {
+    //   setTimeout(() => {
+    //     redirectPath = decodeURIComponent(redirectPath);
+    //     router.push(redirectPath);
+    //   }, 1000);
+    // }
+
+    setTimeout(() => {
+      navigateUserByRole(response.user);
+    }, 2000);
+
     // Wait a moment to show the success message, then redirect
   } catch (err) {
     // Handle different error types
@@ -520,7 +521,7 @@ const login = async () => {
 };
 
 const goToForgotPassword = () => {
-  router.push("/forgot-password");
+  router.push("/user/forgot-password");
 };
 
 // Auto-focus email field on mount
