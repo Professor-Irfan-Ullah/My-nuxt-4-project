@@ -44,7 +44,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   // Skip on server - auth pages are client-only now
   if (process.server) return
 
-  const publicPages = ['/login', '/register', '/']
+  const publicPages = ['/login', '/register', '/user/forgot-password', '/reset-password']
   if (publicPages.includes(to.path)) return
 
   const auth = useAuthStore()
