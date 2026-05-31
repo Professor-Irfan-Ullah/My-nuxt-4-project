@@ -19,7 +19,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
         return navigateUserByRole(auth?.userData)
     }
         */
-    // if (process.client) return
+    if (process.server) return
     const allowedRoles = to.meta.allowedRoles ?? [];
 
     const auth = useAuthStore()
