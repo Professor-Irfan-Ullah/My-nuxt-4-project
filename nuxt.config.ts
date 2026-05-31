@@ -156,6 +156,13 @@ export default defineNuxtConfig({
     },
     '/admin/dashboard' : {
       ssr: false
+    },
+    '/admin/reports' : {
+      ssr: false
+    }
+    ,
+    '/admin/update-report/' : {
+      ssr: false
     }
     // '/login' : {
     //   appMiddleware: {'01-auth-global' : false}
