@@ -72,7 +72,7 @@ export default defineNuxtConfig({
         
 //         return isReportPage && isNavigation && isNotLogin && hasNoRedirect
 //       },
-//       handler: 'StaleWhileRevalidate',
+//       handler: 'CacheFirst',
 //       options: {
 //         cacheName: 'report-pages',
 //         cacheableResponse: {
@@ -93,7 +93,7 @@ export default defineNuxtConfig({
         
 //         return isDashboard && isNavigation && isNotLogin
 //       },
-//       handler: 'StaleWhileRevalidate',
+//       handler: 'CacheFirst',
 //       options: {
 //         cacheName: 'dashboard-pages',
 //         cacheableResponse: {
@@ -145,12 +145,18 @@ export default defineNuxtConfig({
     }
   },
   routeRules: {
+    '/login': {
+      ssr: false
+    },
     '/user/dashboard': {
       ssr: false
     },
     '/user/add-report': {
       ssr: false
     },
+    '/admin/dashboard' : {
+      ssr: false
+    }
     // '/login' : {
     //   appMiddleware: {'01-auth-global' : false}
     // }, '/register' : {
