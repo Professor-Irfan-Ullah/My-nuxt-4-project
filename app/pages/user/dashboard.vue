@@ -385,7 +385,7 @@ onMounted(async () => {
   initializeCurrentDate();
 
   try {
-    await store.userAuthStatus();
+    // await store.userAuthStatus();
     await fetchReports();
     console.log(reportStore.reports);
   } catch (error) {

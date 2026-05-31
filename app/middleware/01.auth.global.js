@@ -43,17 +43,19 @@ import { useAuthStore } from "~/stores/auth"
 export default defineNuxtRouteMiddleware(async (to) => {
   // Skip on server - auth pages are client-only now
   if (process.server) return
-
   const publicPages = ['/login', '/register', '/user/forgot-password', '/reset-password']
   if (publicPages.includes(to.path)) return
+  console.warn('running global auth middleware');
 
   const auth = useAuthStore()
+  const isAuth = await auth.userAuthStatus()
+  console.warn(isAuth, 'checking isAuth on global auth');
 
-  if (!auth.isAuthChecked) {
+  if (isAuth) {
     try {
       await auth.userAuthStatus()
     } catch (error) {
-      console.error('Auth check failed:', error)
+      console.error('Auth check failed in global-auth:')
     }
   }
 
@@ -62,4 +64,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
       replace: true
     })
   }
+  /*
+  */
 })

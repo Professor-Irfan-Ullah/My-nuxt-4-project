@@ -25,10 +25,22 @@ import { useAuthStore } from "~/stores/auth"
 
 // middleware/guest.ts
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  /*
+  // ✅ OFFLINE CHECK - ABSOLUTE FIRST LINE
+  if (process.client && !navigator.onLine) {
+    console.log('🔴 OFFLINE MODE - GUEST MIDDLEWARE BYPASSED')
+    return
+  }
+  if (process.server) {
+    console.log('🟡 Server-side - skipping guest middleware')
+    return
+  }
+
+  // Rest of code only runs when online
+  console.log('🚪 GUEST middleware running on:', to.fullPath)
   const token = useCookie('session_token').value
   const auth = useAuthStore()
 
-  // Force auth check even if token exists but userData is null
   if (token && !auth.userData) {
     try {
       await auth.userAuthStatus()
@@ -37,16 +49,35 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       return
     }
   }
+  console.log('hi');
 
   if (auth.userData) {
     const target = getRoleBasedPath(auth.userData)
     const isAccessingGuestPage = ['/login', '/register'].includes(to.path)
 
     if (isAccessingGuestPage || to.path !== target) {
-
       return navigateTo({ path: target, query: {} }, { replace: true })
     }
   }
+    */
+  if (process.server) return
+  // const isAccessingGuestPage = ['/login', '/register'].includes(to.path);
+  // if (isAccessingGuestPage) return;
+
+  const store = useAuthStore()
+  console.warn('Running guest only middleware', `on ${to.fullPath}`);
+
+  const authCheck = await store.userAuthStatus()
+  if (authCheck) {
+    const target = getRoleBasedPath(store.userData)
+
+
+    if (to.path !== target) {
+      return navigateTo({ path: target, query: {} }, { replace: true })
+    }
+  }
+
+
 })
 
 

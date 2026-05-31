@@ -3,7 +3,7 @@ import { defineStore } from "pinia"
 // app/stores/auth.ts
 export const useAuthStore = defineStore('auth', () => {
     const userData = useState('user-data', () => null)
-    const isAuthChecked = ref(false)
+
     const registerUser = async (name, father_name, email, cnic, contact, muhalla, village, tehsil, district, password) => {
         try {
             // In $fetch, the body goes inside the options object
@@ -75,23 +75,24 @@ export const useAuthStore = defineStore('auth', () => {
 
     // stores/auth.ts
     const userAuthStatus = async () => {
-        if (userData.value) {
-            isAuthChecked.value = true;
-            return true;
+        // 🔑 Only check auth on client-side
+        if (process.server) {
+            console.log('⏭️ Skipping auth check on server')
+            return false
         }
-
+        if (userData.value) return true
         try {
-            // useAsyncData automatically shares the server response with the client payload
-            const data = await useApi('/api/auth/protected')
-            userData.value = data
-            return true
-        } catch {
-            userData.value = null;
-            return false;
-        } finally {
-            isAuthChecked.value = true;
+            const { data } = await useAsyncData('auth-check', () =>
+                useApi('/api/auth/protected')
+            )
+
+            userData.value = data.value?.user || data.value
+            return !!userData.value
+        } catch (error) {
+            userData.value = null
+            return false
         }
-    };
+    }
 
 
 
@@ -115,7 +116,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     return {
-        isAuthChecked,
         login,
         registerUser,
         userAuthStatus,
