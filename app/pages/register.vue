@@ -654,8 +654,6 @@
 <script setup>
 import { useAuthStore } from "~/stores/auth";
 
-// router
-const router = useRouter();
 // nuxt specific
 definePageMeta({
   middleware: "guest-only",
@@ -1031,18 +1029,15 @@ const register = async () => {
       districtName,
       form.password
     );
-    responseMessage.value = response.data.msg;
-    setTimeout(() => {
-      router.push("/login");
-    }, 2000);
+    responseMessage.value = response.msg;
   } catch (err) {
     console.error("Registration error:", err);
     responseMessage.value = "";
     // Show server errors in toast
-    if (err.response?.data?.message) {
-      nameError.value = err.response.data.message;
+    if (err.response?._data?.message) {
+      nameError.value = err.response._data.message;
       showToast();
-    } else if (err.response?.data?.errors) {
+    } else if (err.response?._data?.errors) {
       // Handle validation errors from server
       const serverErrors = err.response.data.errors;
       // You could map server errors to your error states here
