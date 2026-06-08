@@ -365,9 +365,9 @@ const fetchReports = async () => {
     console.error("Failed to load reports:", error);
 
     // Handle 401 - redirect to login
-    if (error.response?.status === 401) {
-      navigateTo("/login");
-    }
+    // if (error.response?.status === 401) {
+    //   navigateTo("/login");
+    // }
   }
 };
 
@@ -387,7 +387,6 @@ onMounted(async () => {
   try {
     // await store.userAuthStatus();
     await fetchReports();
-    console.log(reportStore.reports);
   } catch (error) {
     console.error("Failed to initialize dashboard:", error);
   } finally {
