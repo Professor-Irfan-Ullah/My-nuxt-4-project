@@ -301,7 +301,7 @@ const resendEmail = () => {
 
 // Go to dashboard
 const goToLogin = () => {
-  router.replace("/login");
+  navigateTo("/login", { replace: true });
 
   // In real app: router.push('/dashboard')
 };
