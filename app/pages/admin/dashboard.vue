@@ -2806,7 +2806,7 @@ const fetchDashboardData = async () => {
 
     // Attempt to fetch analytics
     const response = await store.fetchAdminAnalytics();
-    console.log("Dashboard analytics response:", response);
+    // console.log("Dashboard analytics response:", response);
 
     // Use store analytics or fallback to empty array
     dashboardData.value = store?.analytics ?? [];
