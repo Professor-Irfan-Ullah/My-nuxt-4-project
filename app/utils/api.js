@@ -80,6 +80,10 @@
 
 // composables/useApi.js
 export const useApi = (path, options = {}) => {
+  if (process.client && !navigator.onLine) {
+    console.log(`🔴 OFFLINE - Blocked API call to ${path}`)
+    return Promise.reject(new Error('Offline'))
+  }
   const config = useRuntimeConfig();
   const requestFetch = useRequestFetch();
   const headers = useRequestHeaders(['cookie']);

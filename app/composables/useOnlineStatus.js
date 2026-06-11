@@ -1,33 +1,37 @@
+import { hasInternet } from "~/middleware/01.auth.global"
+
 export const useOnlineStatus = () => {
     // Start with null (unknown) instead of true
     const isOnline = ref(null)
     const isChecking = ref(true)
 
-    const checkConnection = async () => {
-        if (!import.meta.client) return true
+    // const checkConnection = async () => {
+    //     if (!import.meta.client) return true
 
-        try {
-            // Try to fetch a small resource
-            const controller = new AbortController()
-            const timeoutId = setTimeout(() => controller.abort(), 3000)
+    //     try {
+    //         // Try to fetch a small resource
+    //         const controller = new AbortController()
+    //         const timeoutId = setTimeout(() => controller.abort(), 3000)
 
-            const response = await fetch('/favicon.ico', {
-                method: 'HEAD',
-                cache: 'no-cache',
-                headers: { 'Pragma': 'no-cache' }
-            })
+    //         const response = await fetch('/favicon.ico', {
+    //             method: 'HEAD',
+    //             cache: 'no-cache',
+    //             headers: { 'Pragma': 'no-cache' }
+    //         })
 
-            clearTimeout(timeoutId)
-            return response.ok || response.status === 404
-        } catch (error) {
-            return false
-        }
-    }
+    //         clearTimeout(timeoutId)
+    //         return response.ok || response.status === 404
+    //     } catch (error) {
+    //         return false
+    //     }
+    // }
 
     const updateOnlineStatus = async () => {
         if (import.meta.client) {
             isChecking.value = true
-            const status = await checkConnection()
+            const status = await hasInternet()
+            console.log(status);
+
             isOnline.value = status
             isChecking.value = false
         }

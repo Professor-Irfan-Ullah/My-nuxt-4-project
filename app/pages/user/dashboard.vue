@@ -362,7 +362,7 @@ const fetchReports = async () => {
   try {
     await reportStore.fetchReports();
   } catch (error) {
-    console.error("Failed to load reports:", error);
+    console.error("Failed to load reports");
 
     // Handle 401 - redirect to login
     // if (error.response?.status === 401) {

@@ -268,23 +268,11 @@
               </div>
             </div>
 
-            <!-- Remember Me Checkbox -->
-            <div class="flex items-center">
-              <input
-                id="remember"
-                v-model="form.remember"
-                type="checkbox"
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label for="remember" class="ml-2 text-sm text-gray-700">
-                Remember me
-              </label>
-            </div>
-
             <!-- Submit Button -->
             <button
               type="submit"
-              :disabled="loading"
+              :title="isOnline === false ? `You are currently Offline` : ``"
+              :disabled="loading || !isOnline"
               :class="[
                 'w-full py-3 px-4 text-white font-medium rounded-lg transition-all shadow-md',
                 loading
@@ -338,12 +326,14 @@
 
 <script setup>
 import { useAuthStore } from "~/stores/auth";
+const { isOnline, isChecking } = useOnlineStatus();
 const store = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 // nuxt specific
 definePageMeta({
   middleware: "guest-only",
+  layout: "user",
 });
 useSeoMeta({
   title: "Login Page",
@@ -464,13 +454,10 @@ const login = async () => {
     const loginData = {
       email: form.email,
       password: form.password,
-      remember: form.remember,
     };
 
     // const response = await api.post('/api/auth/login', loginData)
     const response = await store.login(loginData.email, loginData.password);
-
-    console.log("Login successful:", response.user);
 
     // Show success message
     let redirectPath = route.query.redirect;

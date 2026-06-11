@@ -12,10 +12,16 @@
     </div>
   </div>
 </template> -->
+<!-- pages/index.vue -->
 <script setup>
 definePageMeta({
   middleware: [
     function (to, from) {
+      // 🚨 OFFLINE BYPASS FIRST
+      if (process.client && !navigator.onLine) {
+        console.log("🔴 OFFLINE MODE - INDEX MIDDLEWARE BYPASSED");
+        return;
+      }
       return navigateTo("/login");
     },
   ],

@@ -60,22 +60,26 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
   }
     */
-  if (process.server) return
-  // const isAccessingGuestPage = ['/login', '/register'].includes(to.path);
-  // if (isAccessingGuestPage) return;
+  // if (process.server) return
+  // // const isAccessingGuestPage = ['/login', '/register'].includes(to.path);
+  // // if (isAccessingGuestPage) return;
+  // if (!navigator.onLine) {
+  //   console.log('offline check in guest middleware');
+  //   return
+  // }
 
-  const store = useAuthStore()
-  console.warn('Running guest only middleware', `on ${to.fullPath}`);
+  // const store = useAuthStore()
+  // console.warn('Running guest only middleware', `on ${to.fullPath}`);
 
-  const authCheck = await store.userAuthStatus()
-  if (authCheck) {
-    const target = getRoleBasedPath(store.userData)
+  // const authCheck = await store.userAuthStatus()
+  // if (authCheck) {
+  //   const target = getRoleBasedPath(store.userData)
 
 
-    if (to.path !== target) {
-      return navigateTo({ path: target, query: {} }, { replace: true })
-    }
-  }
+  //   if (to.path !== target) {
+  //     return navigateTo({ path: target, query: {} }, { replace: true })
+  //   }
+  // }
 
 
 })

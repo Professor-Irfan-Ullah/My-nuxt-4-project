@@ -2,7 +2,7 @@
 <template>
   <div class="status-indicators">
     <!-- Top Right Status Badges -->
-    <div class="fixed top-4 right-4 z-50 space-y-2">
+    <div class="fixed bottom-2 right-0 z-50 space-y-2">
       <!-- Already Submitted Warning -->
       <div v-if="hasSubmitted" class="status-badge status-badge--submitted">
         <span class="status-icon">⚠️</span>

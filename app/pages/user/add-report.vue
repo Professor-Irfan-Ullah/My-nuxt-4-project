@@ -1247,7 +1247,6 @@ import { useOnlineStatus } from "~/composables/useOnlineStatus";
 import { useReportSync } from "~/composables/useReportSync";
 
 definePageMeta({
-  middleware: "role-check",
   allowedRoles: ["user", "admin"],
 });
 useSeoMeta({
@@ -1266,6 +1265,7 @@ const {
   retryFailedReports = () => {},
   loadPendingCount,
   checkSubmissionStatus,
+  syncErrors,
 } = useReportSync();
 
 // Response message
@@ -1366,6 +1366,21 @@ watch(pendingCount, (newCount, oldCount) => {
   }
 });
 
+// watch for Sync errors
+watch(
+  syncErrors,
+  (errors) => {
+    if (errors.length) {
+      errorMessage.value = errors
+        .map(
+          (err) => err.message || "Something went wrong please try again later"
+        )
+        .join();
+      showErrorModal.value = true;
+    }
+  },
+  { deep: true }
+);
 // Refs for file inputs
 const propertyInputRefs = ref([]);
 
@@ -2092,7 +2107,7 @@ const submitForm = async () => {
         } else {
           showSuccessModal.value = false;
           showErrorModal.value = true;
-          errorMessage.value = error.response?.data?.message || error.message;
+          errorMessage.value = error.response?._data?.message || error.message;
         }
       }
     } else {
