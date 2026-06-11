@@ -39,6 +39,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     //         console.log('error in role check middleware');
     //     }
     // }
+    if (process.server) return
+
     const allowedRoles = to.meta.allowedRoles ?? [];
 
     console.log('role check middleware', to.fullPath);
