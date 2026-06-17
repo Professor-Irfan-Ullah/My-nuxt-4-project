@@ -80,7 +80,16 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   //     return navigateTo({ path: target, query: {} }, { replace: true })
   //   }
   // }
-
+  const store = useAuthStore()
+  const isAuth = await store.userAuthStatus()
+  if (isAuth) {
+    if (store.userData.role) {
+      const target = getRoleBasedPath(store.userData)
+      if (to.path !== target) {
+        return navigateTo({ path: target, query: {} }, { replace: true })
+      }
+    }
+  }
 
 })
 

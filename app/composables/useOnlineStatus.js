@@ -30,7 +30,6 @@ export const useOnlineStatus = () => {
         if (import.meta.client) {
             isChecking.value = true
             const status = await hasInternet()
-            console.log(status);
 
             isOnline.value = status
             isChecking.value = false

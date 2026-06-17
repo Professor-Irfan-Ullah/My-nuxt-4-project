@@ -2046,7 +2046,7 @@ const submitForm = async () => {
 
       responseMsg.value = `📱 Report saved locally! Will submit when online.`;
       showSuccessModal.value = true;
-      resetForm();
+      // resetForm();
     } else {
       // Submit normally when online
       const formData = new FormData();
@@ -2120,41 +2120,39 @@ const submitForm = async () => {
   }
 };
 const resetForm = () => {
-  /*
-  disasterType.value = ''
-  location.value = ''
-  disasterTypeError.value = ''
-  locationError.value = ''
+  disasterType.value = "";
+  location.value = "";
+  disasterTypeError.value = "";
+  locationError.value = "";
 
-  arePropertiesImpacted.value = false
-  areHumansImpacted.value = false
-  areAnimalsImpacted.value = false
+  arePropertiesImpacted.value = false;
+  areHumansImpacted.value = false;
+  areAnimalsImpacted.value = false;
 
   properties.value = [
     {
       id: Date.now(),
-      propertyType: '',
+      propertyType: "",
       damageLevel: null,
       image: null,
     },
-  ]
+  ];
 
-  totalResidentsCount.value = 0
-  deathsCount.value = 0
-  injuredCount.value = 0
-  pregnantWomenCount.value = 0
-  disabledPersonsCount.value = 0
-  schoolGoingChildrenCount.value = 0
-  marriedCouplesCount.value = 0
+  totalResidentsCount.value = 0;
+  deathsCount.value = 0;
+  injuredCount.value = 0;
+  pregnantWomenCount.value = 0;
+  disabledPersonsCount.value = 0;
+  schoolGoingChildrenCount.value = 0;
+  marriedCouplesCount.value = 0;
 
-  bigAnimalsDeathCount.value = 0
-  bigAnimalsInjuredCount.value = 0
-  smallAnimalsDeathCount.value = 0
-  smallAnimalsInjuredCount.value = 0
+  bigAnimalsDeathCount.value = 0;
+  bigAnimalsInjuredCount.value = 0;
+  smallAnimalsDeathCount.value = 0;
+  smallAnimalsInjuredCount.value = 0;
 
-  propertyInputRefs.value = []
+  propertyInputRefs.value = [];
 
-  */
   isSubmitting.value = false;
   showSuccessModal.value = false;
 };
