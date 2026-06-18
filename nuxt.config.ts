@@ -159,6 +159,9 @@ workbox: {
     }
   },
   routeRules: {
+    '/register':{
+      ssr:false
+    },
     '/login': {
       ssr: false
     },
