@@ -1,8 +1,19 @@
 {
+    "version": 2,
+    "cleanUrls": true,
+    "trailingSlash": false,
     "rewrites": [
         {
             "source": "/api/:path*",
             "destination": "https://city-centric-backend-e8z9.vercel.app/api/:path*"
+        },
+        {
+            "source": "/_nuxt/(.*)",
+            "destination": "/_nuxt/$1"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/.output/server/index.mjs"
         }
     ]
 }
